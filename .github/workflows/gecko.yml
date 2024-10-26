@@ -1,0 +1,33 @@
+name: Gecko CI
+
+on: [push, pull_request]
+
+jobs:
+  Windows:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5.2.0
+        with:
+          python-version: 3.9
+
+      - name: Make Dist Directory
+        run: mkdir dist
+
+      - name: Compile removeCapsuleCostCheck.asm Code
+        run: compiler/codewrite/powerpc-gekko-as.exe -a32 -mbig -mregnames -mgekko src/randomCapsules.asm && python3 gecko.py a.out 8008c894 1randomCapsules.txt1
+
+      - name: Compile removeCapsuleCostCheck.asm Code
+        run: compiler/codewrite/powerpc-gekko-as.exe -a32 -mbig -mregnames -mgekko src/dkLoop.asm && python3 gecko.py a.out 8004bf38 2dkLoop.txt1
+
+      - name: Merge The Codes
+        run: type *.txt1 > dist/mainCode.txt
+
+      - name: Upload Gecko Code
+        uses: actions/upload-artifact@v4
+        with:
+          name: MP5ShopMod-Gecko
+          path: dist/
