@@ -14,7 +14,7 @@ dk_change_loop:
     cmpw r3, r4
     bne+ 0x10
     
-    ; Change DK capsule to proper DK space.
+    #Change DK capsule to proper DK space.
     lis r4, 8
     ori r4, r4, 0xffff
     stw r4, 0x2c (r29)
